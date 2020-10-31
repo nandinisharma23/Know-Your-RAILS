@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+background: -webkit-linear-gradient(360deg, rgba(34, 46, 64, 1), rgba(81, 195, 184, 1));
+}
+
+* {
+    box-sizing: border-box;
+}
+.h2{
+    text-align: center;
+    color: black;
+    text-justify: auto;
+}
+input[type=text], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+}
+input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+.container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+.h3{
+            text-align: center;
+            color:#444;
+            text-justify: auto;
+}
+.display1{
+            text-justify: auto;
+            color: black;
+            background-repeat: repeat;
+            background-color: antiquewhite;
+}
+.col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+}
+.col-75 {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+}
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    .col-25, .col-75, input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h2>Get train fare</h2>
+
+<div class="container">
+  <form id="frm1" action="">
+    <div class="row">
+      <div class="col-25">
+        <label for="Train number">Train Number</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="tno" name="trainNumber" placeholder="Train number..">
+      </div>
+    </div>
+   
+    <div class="row">
+        <div class="col-25">
+          <label for="Source code">Source Code</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="sc" name="Source Code" placeholder="Enter Source code">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="Destination code">Destination Code</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="dc" name="Destination Code" placeholder="Enter Destination code">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="age">Age</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="age" name="Age" placeholder="Enter Age">
+        </div>
+      </div>
+     
+      <div class="row">
+        <div class="col-25">
+          <label for="qu">Preference</label>
+        </div>
+        <div class="col-75">
+          <input type="text" id="pref" name="Pref" placeholder="Enter Preference">
+        </div>
+      </div>
+      
+    <div class="row">
+      <div class="col-25">
+        <label for="qu">Quota</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="qu" name="Quota" placeholder="Enter quota">
+      </div>
+    </div>
+    </div>
+
+    
+    <div class="row">
+        <div class="col-25">
+          <label for="Date">Date</label>
+        </div>
+        <div class="col-75">
+          <input type="text" pattern="\d{1,2}-\d{1,2}-\d{4}" class="datepicker" name="date" value="" placeholder="Input date in dd-mm-yyyy onlys"/>
+        </div>
+      </div>
+    
+   
+  </form>
+  <input type="button" value="Refresh Page" onClick="history.go(0)">
+  <button onclick="myFunction()">Submit</button>
+</div>
+<script>
+var url = "";
+function myFunction() {
+    var x = document.getElementById("frm1");
+    var tno = "";
+	var sc = "";
+	var dc = "";
+	var age = "";
+	var pref = "";
+	var quota= "";
+	var date="";
+    tno = x.elements[0].value;
+	sc = x.elements[1].value;
+	dc = x.elements[2].value;
+	age = x.elements[3].value;
+	pref = x.elements[4].value;
+    quota = x.elements[5].value;
+	date = x.elements[6].value;
+    //document.getElementById("tno").innerHTML = tno;
+	//document.getElementById("date").innerHTML = date;
+	url="https://api.railwayapi.com/v2/fare/train/"+tno+"/source/"+sc+"/dest/"+dc+"/age/"+age+"/pref/"+pref+"/quota/"+quota+"/date/"+date+"/apikey/bakve2a270/";
+	//url="https://api.railwayapi.com/v2/check-seat/train/"+tno+"/source/"+sc+"/dest/"+dc+"/date/"+date+"/pref/"+pref+"/quota/"+quota+"/apikey/hle1qd3kks/";
+}
+$(document).ready(function(){
+    $("button").click(function(){
+      $("button").animate({
+            height: 'toggle'
+        });
+        $.getJSON(url, function(result) {
+            $("h3").append("Name: "+result.train.name + " "+"</br>"+"Number: "+result.train.number + " "+"</br>"+"From: "+result.from_station.name + " "+"</br>"+"To: "+result.to_station.name + " "+"</br>"+"Quota: "+result.quota.name + " "+"</br>"+"Class: "+result.journey_class.code + " "+"  "+"  "+"Fare: "+result.fare+" "+"</br></br>");
+			console.log(result);
+        });
+    });
+});
+</script>
+<div class="display1">
+
+  <h3></h3>
+  </div>
+
+</body>
+</html>
